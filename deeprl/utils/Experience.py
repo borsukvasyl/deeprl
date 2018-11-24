@@ -39,6 +39,12 @@ class Experience(object):
         """
         return self.size == self.experience.maxlen - 1
 
+    def _add(self, data):
+        self.experience.append(data)
+
+    def add(self, state, action, reward, next_state, done):
+        self._add([state, action, reward, next_state, done])
+
     def clear(self):
         """
         Clears experience
