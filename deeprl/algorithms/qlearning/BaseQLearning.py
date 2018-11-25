@@ -5,17 +5,24 @@ from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 import numpy as np
 
+from deeprl.algorithms import BaseAlgorithm
 
-class BaseQLearning(object):
+
+class BaseQLearning(BaseAlgorithm):
     __metaclass__ = ABCMeta
 
-    def __init__(self, config, env, model):
-        self.env = env
-        self.model = model
+    def __init__(self, config, env, model, policy):
+        super(BaseQLearning, self).__init__(env, model, policy)
 
         self.discount_factor = config.discount_factor
 
-        self.callbacks = []
+    @abstractmethod
+    def run_episode(self):
+        pass
+
+    def choose_action(self, state):
+        q_value = self.model.get_one_q(state)
+        return self.policy.choose_action(q_value)
 
     def get_q_target(self, batch_rewards, batch_next_states, batch_dones):
         q_next_state = self.model.get_q(batch_next_states)
@@ -27,7 +34,3 @@ class BaseQLearning(object):
                 target += self.discount_factor * np.max(q_next_state[i])
             q_target[i] = target
         return q_target
-
-    def run_callbacks_on_episode(self):
-        for callback in self.callbacks:
-            callback.on_episode()

@@ -12,12 +12,12 @@ from deeprl.algorithms.qlearning import BaseQLearning
 
 class DQN(BaseQLearning):
     def __init__(self, config, env, model):
-        super(DQN, self).__init__(config, env, model)
+        policy = EGreedyPolicy(config.e)
+        super(DQN, self).__init__(config, env, model, policy)
 
         self.batch_size = config.batch_size
 
         self.experience = Experience(config.experience_size)
-        self.policy = EGreedyPolicy(config.e)
         self.callbacks.append(EGreedyDecay(self.policy, config.e_min, config.e_decay))
 
     def run_episode(self):
@@ -31,14 +31,12 @@ class DQN(BaseQLearning):
 
             self.experience.add(s, a, r, s1, done)
             s = s1
+
             r_total += r
-
             loss = self.update_model()
-        self.run_callbacks_on_episode()
 
-    def choose_action(self, state):
-        q_value = self.model.get_one_q(state)
-        return self.policy.choose_action(q_value)
+        logs = {"loss": loss, "r_total": r_total}
+        return logs
 
     def update_model(self):
         if self.experience.size > self.batch_size:
@@ -52,7 +50,3 @@ class DQN(BaseQLearning):
             q_target = self.get_q_target(batch_r, batch_s1, batch_done)
             loss = self.model.train(batch_s, batch_a, q_target)
             return loss
-
-    def train(self, num_episodes):
-        for episode in range(num_episodes):
-            self.run_episode()
