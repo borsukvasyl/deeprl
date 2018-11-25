@@ -8,7 +8,7 @@ import tensorflow as tf
 import random
 
 from deeprl.algorithms.qlearning import DQN, DQNConfig
-from deeprl.models import AbstractDQN
+from deeprl.models import BaseDQN
 
 
 RANDOM_SEED = 40
@@ -18,11 +18,11 @@ np.random.seed(RANDOM_SEED)
 tf.set_random_seed(RANDOM_SEED)
 
 
-class DQNetwork(AbstractDQN):
-    def __init__(self, sess, s_size, a_size):
-        self.sess = sess
-        self.s_size = s_size
-        self.a_size = a_size
+class DQNetwork(BaseDQN):
+    def __init__(self, sess_, s_size_, a_size_):
+        self.sess = sess_
+        self.s_size = s_size_
+        self.a_size = a_size_
 
         self.states = tf.placeholder(shape=[None, self.s_size], dtype=tf.float32)
         self.q_target = tf.placeholder(shape=[None], dtype=tf.float32)
