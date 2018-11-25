@@ -2,4 +2,4 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from deeprl.models.AbstractDQN import AbstractDQN
+from deeprl.models.BaseDQN import BaseDQN

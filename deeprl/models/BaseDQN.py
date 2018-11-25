@@ -5,7 +5,7 @@ from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractDQN(object):
+class BaseDQN(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
