@@ -4,8 +4,10 @@ from __future__ import print_function
 
 from abc import ABCMeta, abstractmethod
 
+from deeprl.models import BaseModel
 
-class BaseDQN(object):
+
+class BaseDQN(BaseModel):
     __metaclass__ = ABCMeta
 
     @abstractmethod
