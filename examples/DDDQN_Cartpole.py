@@ -8,7 +8,7 @@ import tensorflow as tf
 import random
 
 from deeprl.algorithms.qlearning import DoubleDQN, DQNConfig
-from deeprl.models.qlearning import BaseDQN
+from deeprl.models.qlearning import BaseDuelingDQN
 
 
 RANDOM_SEED = 40
@@ -18,7 +18,7 @@ np.random.seed(RANDOM_SEED)
 tf.set_random_seed(RANDOM_SEED)
 
 
-class DQNetwork(BaseDQN):
+class DQNetwork(BaseDuelingDQN):
     def build(self, s_size, a_size):
         self.s_size = s_size
         self.a_size = a_size
@@ -28,7 +28,9 @@ class DQNetwork(BaseDQN):
         self.actions = tf.placeholder(shape=[None, ], dtype=tf.uint8)
 
         self.dense = tf.layers.dense(inputs=self.states, units=20, activation=tf.nn.tanh)
-        self.q_value = tf.layers.dense(inputs=self.dense, units=self.a_size)
+        self.value = tf.layers.dense(inputs=self.dense, units=1)
+        self.advantage = tf.layers.dense(inputs=self.dense, units=self.a_size)
+        self.q_value = self.calculate_q_value(self.value, self.advantage)
 
         self.loss = self.calculate_loss(self.q_value, self.q_target, self.actions, self.a_size)
         trainer = tf.train.AdamOptimizer(learning_rate=0.01)

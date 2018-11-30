@@ -30,9 +30,7 @@ class DQNetwork(BaseDQN):
         self.dense = tf.layers.dense(inputs=self.states, units=20, activation=tf.nn.tanh)
         self.q_value = tf.layers.dense(inputs=self.dense, units=self.a_size)
 
-        actions_oh = tf.one_hot(self.actions, self.a_size)
-        used_q = tf.reduce_sum(tf.multiply(self.q_value, actions_oh), axis=1)
-        self.loss = tf.reduce_mean(tf.square(self.q_target - used_q))
+        self.loss = self.calculate_loss(self.q_value, self.q_target, self.actions, self.a_size)
         trainer = tf.train.AdamOptimizer(learning_rate=0.01)
         self.optimize = trainer.minimize(self.loss)
 
