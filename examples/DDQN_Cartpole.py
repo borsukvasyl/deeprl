@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 import random
 
-from deeprl.algorithms.qlearning import DQN, DQNConfig
+from deeprl.algorithms.qlearning import DoubleDQN, DQNConfig
 from deeprl.models.qlearning import BaseDQN
 
 
@@ -60,7 +60,7 @@ env = gym.make("CartPole-v0")
 sess = tf.Session()
 model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 config = DQNConfig()
-algorithm = DQN(config, env, model)
+algorithm = DoubleDQN(config, env, model)
 
 sess.run(tf.global_variables_initializer())
 
