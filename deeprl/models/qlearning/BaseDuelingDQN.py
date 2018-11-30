@@ -13,4 +13,10 @@ class BaseDuelingDQN(BaseDQN):
 
     @staticmethod
     def calculate_q_value(value, advantage):
+        """
+        Calculates Q-value from value and advantage
+        :param value: tensor [batch_size,]
+        :param advantage: tensor [batch_size, a_size]
+        :return: tensor [batch_size, a_size]
+        """
         return value + tf.subtract(advantage, tf.reduce_mean(advantage, axis=1, keepdims=True))
