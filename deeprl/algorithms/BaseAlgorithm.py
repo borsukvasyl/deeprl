@@ -10,11 +10,10 @@ from deeprl.callbacks import CallbackList, ConsoleLogger
 class BaseAlgorithm(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, env, model, policy):
+    def __init__(self, env, model):
         self.env = env
         self.model = model
 
-        self.policy = policy
         self.callbacks = CallbackList([
             ConsoleLogger()
         ])
