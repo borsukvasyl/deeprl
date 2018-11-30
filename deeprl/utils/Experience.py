@@ -11,7 +11,7 @@ class Experience(object):
     Data structure to store experience frames
     """
 
-    def __init__(self, maxlen):
+    def __init__(self, maxlen=None):
         """
         :param maxlen: int, maximum length of experience
         """
