@@ -51,5 +51,6 @@ class BaseDQN(BaseModel):
         """
         if a_size != -1:
             actions = tf.one_hot(actions, a_size)
+
         used_q = tf.reduce_sum(tf.multiply(q_value, actions), axis=1)
         return tf.reduce_mean(tf.square(q_target - used_q))
