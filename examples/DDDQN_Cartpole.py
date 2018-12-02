@@ -56,7 +56,6 @@ print("Action space size: {}".format(a_size))
 print("State space size: {}".format(s_size))
 
 
-env = gym.make("CartPole-v0")
 sess = tf.Session()
 model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 config = DQNConfig()
