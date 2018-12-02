@@ -59,3 +59,7 @@ class Experience(object):
         :return: list or ValueError, if batch_size is negative ot bigger than experience length
         """
         return random.sample(self.experience, batch_size)
+
+    def __iter__(self):
+        for exp in self.experience:
+            yield exp
