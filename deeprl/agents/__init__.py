@@ -6,3 +6,4 @@ from deeprl.agents.BaseAgent import BaseAgent
 
 from deeprl.agents.QAgent import QAgent
 from deeprl.agents.PolicyAgent import PolicyAgent
+from deeprl.agents.ActorCriticAgent import ActorCriticAgent

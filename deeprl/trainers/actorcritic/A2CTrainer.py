@@ -5,22 +5,18 @@ from __future__ import print_function
 import numpy as np
 
 from deeprl.trainers import BaseTrainer
-from deeprl.policy import StochasticPolicy
 from deeprl.utils import Experience
 
 
-class A2C(BaseTrainer):
-    def __init__(self, config, env, model):
-        super(A2C, self).__init__(env, model)
+class A2CTrainer(BaseTrainer):
+    def __init__(self, config, agent, env):
+        super(A2CTrainer, self).__init__(agent, env)
 
         self.discount_factor = config.discount_factor
         self.batch_size = config.batch_size
 
-        self.policy = StochasticPolicy()
-
     def choose_action(self, state):
-        pi = self.model.get_one_policy(state)
-        return self.policy.choose_action(pi)
+        return self.agent.choose_action(state)
 
     def run_episode(self):
         s = self.env.reset()
@@ -54,13 +50,13 @@ class A2C(BaseTrainer):
 
         batch_target_v = self.get_v_target(batch_r, batch_s1, batch_done)
         batch_advantages = self.get_advantages(batch_target_v, batch_s)
-        loss = self.model.train(batch_s, batch_a, batch_advantages, batch_target_v)
+        loss = self.agent.model.train(batch_s, batch_a, batch_advantages, batch_target_v)
         return loss
 
     def get_v_target(self, batch_rewards, batch_next_states, batch_done):
         target_value = 0
         if not batch_done[-1]:
-            target_value = self.model.get_v([batch_next_states[-1]])[0]
+            target_value = self.agent.model.get_v([batch_next_states[-1]])[0]
 
         target_values = np.zeros_like(batch_rewards)
         for i in range(len(batch_rewards) - 1, -1, -1):
@@ -69,7 +65,5 @@ class A2C(BaseTrainer):
         return target_values
 
     def get_advantages(self, batch_target_v, batch_s):
-        batch_v = self.model.get_v(batch_s)
+        batch_v = self.agent.model.get_v(batch_s)
         return np.array(batch_target_v) - np.array(batch_v)
-
-

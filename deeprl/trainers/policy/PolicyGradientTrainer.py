@@ -8,8 +8,8 @@ from deeprl.trainers import BaseTrainer
 
 
 class PolicyGradientTrainer(BaseTrainer):
-    def __init__(self, config, env, model):
-        super(PolicyGradientTrainer, self).__init__(env, model)
+    def __init__(self, config, agent, env):
+        super(PolicyGradientTrainer, self).__init__(agent, env)
 
         self.discount_factor = config.discount_factor
 
