@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 import random
 
-from deeprl.algorithms.actorcritic import A2C, ACConfig
+from deeprl.trainers.actorcritic import A2C, ACConfig
 from deeprl.models.actorcritic import BaseACNet
 
 

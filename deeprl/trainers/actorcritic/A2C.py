@@ -4,12 +4,12 @@ from __future__ import print_function
 
 import numpy as np
 
-from deeprl.algorithms import BaseAlgorithm
+from deeprl.trainers import BaseTrainer
 from deeprl.policy import StochasticPolicy
 from deeprl.utils import Experience
 
 
-class A2C(BaseAlgorithm):
+class A2C(BaseTrainer):
     def __init__(self, config, env, model):
         super(A2C, self).__init__(env, model)
 
