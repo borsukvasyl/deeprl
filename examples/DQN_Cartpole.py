@@ -7,7 +7,8 @@ import numpy as np
 import tensorflow as tf
 import random
 
-from deeprl.algorithms.qlearning import DQN, DQNConfig
+from deeprl.agents import QAgent
+from deeprl.trainers.qlearning import DQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDQN
 
 
@@ -56,8 +57,9 @@ print("State space size: {}".format(s_size))
 
 sess = tf.Session()
 model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
+agent = QAgent(model)
 config = DQNConfig()
-algorithm = DQN(config, env, model)
+algorithm = DQNTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
@@ -68,6 +70,6 @@ s = env.reset()
 done = False
 while not done:
     env.render()
-    a = algorithm.choose_action(s)
+    a = agent.choose_action(s)
     s, r, done, _ = env.step(a)
 env.close()

@@ -7,12 +7,12 @@ from abc import ABCMeta, abstractmethod
 from deeprl.callbacks import CallbackList, ConsoleLogger
 
 
-class BaseAlgorithm(object):
+class BaseTrainer(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, env, model):
+    def __init__(self, agent, env):
+        self.agent = agent
         self.env = env
-        self.model = model
 
         self.callbacks = CallbackList([
             ConsoleLogger()
@@ -20,10 +20,6 @@ class BaseAlgorithm(object):
 
     @abstractmethod
     def run_episode(self):
-        pass
-
-    @abstractmethod
-    def choose_action(self, state):
         pass
 
     def train(self, num_episodes):

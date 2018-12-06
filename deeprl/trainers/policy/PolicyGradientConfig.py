@@ -3,6 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 
-class PolicyConfig(object):
+class PolicyGradientConfig(object):
     def __init__(self):
         self.discount_factor = 0.99

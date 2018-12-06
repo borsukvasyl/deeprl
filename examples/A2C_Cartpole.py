@@ -7,7 +7,8 @@ import numpy as np
 import tensorflow as tf
 import random
 
-from deeprl.algorithms.actorcritic import A2C, ACConfig
+from deeprl.agents import ActorCriticAgent
+from deeprl.trainers.actorcritic import A2CTrainer, ACConfig
 from deeprl.models.actorcritic import BaseACNet
 
 
@@ -64,8 +65,9 @@ print("State space size: {}".format(s_size))
 
 sess = tf.Session()
 model = ACNet("main", sess, s_size=s_size, a_size=a_size)
+agent = ActorCriticAgent(model)
 config = ACConfig()
-algorithm = A2C(config, env, model)
+algorithm = A2CTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
@@ -76,6 +78,6 @@ s = env.reset()
 done = False
 while not done:
     env.render()
-    a = algorithm.choose_action(s)
+    a = agent.choose_action(s)
     s, r, done, _ = env.step(a)
 env.close()

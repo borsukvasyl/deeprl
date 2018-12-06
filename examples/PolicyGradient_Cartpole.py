@@ -7,7 +7,8 @@ import numpy as np
 import tensorflow as tf
 import random
 
-from deeprl.algorithms.policy import PolicyGradient, PolicyConfig
+from deeprl.agents import PolicyAgent
+from deeprl.trainers.policy import PolicyGradientTrainer, PolicyGradientConfig
 from deeprl.models.policy import BasePolicyNet
 
 
@@ -58,8 +59,9 @@ print("State space size: {}".format(s_size))
 
 sess = tf.Session()
 model = PolicyNet("main", sess, s_size=s_size, a_size=a_size)
-config = PolicyConfig()
-algorithm = PolicyGradient(config, env, model)
+agent = PolicyAgent(model)
+config = PolicyGradientConfig()
+algorithm = PolicyGradientTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
