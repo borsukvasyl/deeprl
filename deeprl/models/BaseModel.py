@@ -50,6 +50,4 @@ class BaseModel(object):
         :param name: str, name of new model
         :return: BaseModel
         """
-        new_model = self.__class__(name, self.session, **self.kwargs)
-        new_model.sync(self)
-        return new_model
+        return self.__class__(name, self.session, **self.kwargs)
