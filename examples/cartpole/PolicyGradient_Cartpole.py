@@ -61,17 +61,17 @@ sess = tf.Session()
 model = PolicyNet("main", sess, s_size=s_size, a_size=a_size)
 agent = PolicyAgent(model)
 config = PolicyGradientConfig()
-algorithm = PolicyGradientTrainer(config, agent, env)
+trainer = PolicyGradientTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
-algorithm.train(200)
+trainer.train(200)
 
 
 s = env.reset()
 done = False
 while not done:
     env.render()
-    a = algorithm.choose_action(s)
+    a = agent.choose_action(s)
     s, r, done, _ = env.step(a)
 env.close()

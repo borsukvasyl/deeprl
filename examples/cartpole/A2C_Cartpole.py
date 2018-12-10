@@ -68,12 +68,12 @@ sess = tf.Session()
 model = ACNet("main", sess, s_size=s_size, a_size=a_size)
 agent = ActorCriticAgent(model)
 config = ACConfig()
-algorithm = A2CTrainer(config, agent, env)
-algorithm.callbacks.append(Saver(model, step=10))
+trainer = A2CTrainer(config, agent, env)
+trainer.callbacks.append(Saver(model, step=10))
 
 sess.run(tf.global_variables_initializer())
 
-algorithm.train(300)
+trainer.train(300)
 
 
 s = env.reset()

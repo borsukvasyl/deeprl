@@ -59,11 +59,11 @@ sess = tf.Session()
 model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 agent = QAgent(model)
 config = DQNConfig()
-algorithm = DoubleDQNTrainer(config, agent, env)
+trainer = DoubleDQNTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
-algorithm.train(300)
+trainer.train(300)
 
 
 s = env.reset()
