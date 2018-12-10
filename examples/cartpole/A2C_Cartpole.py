@@ -11,6 +11,7 @@ from deeprl.agents import ActorCriticAgent
 from deeprl.callbacks.Saver import Saver
 from deeprl.trainers.actorcritic import A2CTrainer, ACConfig
 from deeprl.models.actorcritic import BaseACNet
+from deeprl.utils import record_video
 
 
 RANDOM_SEED = 40
@@ -57,6 +58,7 @@ class ACNet(BaseACNet):
 
 
 env = gym.make("CartPole-v0")
+env._max_episode_steps = 800
 
 a_size = env.action_space.n
 s_size = env.observation_space.shape[0]
@@ -67,19 +69,20 @@ print("State space size: {}".format(s_size))
 sess = tf.Session()
 model = ACNet("main", sess, s_size=s_size, a_size=a_size)
 agent = ActorCriticAgent(model)
-config = ACConfig()
-trainer = A2CTrainer(config, agent, env)
-trainer.callbacks.append(Saver(model, step=10))
-
 sess.run(tf.global_variables_initializer())
 
-trainer.train(300)
+checkpoint = tf.train.get_checkpoint_state("model_chkp")
+if checkpoint and checkpoint.model_checkpoint_path:
+    print("Loading: {}".format(checkpoint.model_checkpoint_path))
+    saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, model.name))
+    saver.restore(sess, checkpoint.model_checkpoint_path)
+else:
+    config = ACConfig()
+    config.discount_factor = 0.9
+    trainer = A2CTrainer(config, agent, env)
+    trainer.callbacks.append(Saver(model, step=20))
+
+    trainer.train(2000)
 
 
-s = env.reset()
-done = False
-while not done:
-    env.render()
-    a = agent.choose_action(s)
-    s, r, done, _ = env.step(a)
-env.close()
+record_video(agent, env)

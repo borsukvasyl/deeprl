@@ -3,3 +3,5 @@
 
 *.pyc
 
+examples/*/video*/
+examples/*/model*/
