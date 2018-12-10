@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 from abc import ABCMeta, abstractmethod
-from tensorflow.python.ops.variable_scope import variable_scope
+import tensorflow as tf
 
 from deeprl.utils import copy_graph
 
@@ -23,7 +23,7 @@ class BaseModel(object):
 
         self.kwargs = kwargs
 
-        with variable_scope(self.name):
+        with tf.variable_scope(self.name):
             self.build(**kwargs)
 
     @abstractmethod
@@ -50,4 +50,6 @@ class BaseModel(object):
         :param name: str, name of new model
         :return: BaseModel
         """
-        return self.__class__(name, self.session, **self.kwargs)
+        new_model = self.__class__(name, self.session, **self.kwargs)
+        new_model.sync(self)
+        return new_model
