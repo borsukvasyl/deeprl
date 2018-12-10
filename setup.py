@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name='deeprl',
     version='0.1',
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(exclude=['docs', 'tests', 'examples', 'algorithms']),
     url='https://github.com/borsukvasyl/deeprl',
     license='ISC',
     author='Vasyl Borsuk',
@@ -22,8 +22,3 @@ setup(
         "gym"
     ]
 )
-
-# ['deeprl', 'deeprl.utils', 'deeprl.agents', 'deeprl.models', 'deeprl.models.policy',
-#               'deeprl.models.qlearning', 'deeprl.models.actorcritic', 'deeprl.policy', 'deeprl.trainers',
-#               'deeprl.trainers.policy', 'deeprl.trainers.qlearning', 'deeprl.trainers.actorcritic', 'deeprl.callbacks',
-#               'deeprl.environments', 'examples']
