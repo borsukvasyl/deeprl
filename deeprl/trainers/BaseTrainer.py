@@ -22,10 +22,10 @@ class BaseTrainer(object):
     def run_episode(self):
         pass
 
-    def train(self, num_episodes):
-        self.callbacks.on_train_begin()
+    def train(self, num_episodes, start_episode=0):
+        self.callbacks.on_train_begin(start_episode=start_episode)
 
-        for episode in range(num_episodes):
+        for episode in range(start_episode, num_episodes):
             self.callbacks.on_episode_begin(episode)
             logs = self.run_episode()
             self.callbacks.on_episode_end(episode, logs)

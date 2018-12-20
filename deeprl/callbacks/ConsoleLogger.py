@@ -21,7 +21,7 @@ class ConsoleLogger(BaseCallback):
 
         logging.basicConfig(level=level, format=head_format)
 
-    def on_episode_end(self, episode, logs=None):
+    def on_episode_end(self, episode, logs=None, **kwargs):
         """
         Prints episode total reward and loss
         :param episode: int, episode number
@@ -32,15 +32,16 @@ class ConsoleLogger(BaseCallback):
             logs = {}
         logging.info("EPISODE {}: total_reward: {}, loss: {}".format(episode, logs.get("r_total"), logs.get("loss")))
 
-    def on_train_begin(self, logs=None):
+    def on_train_begin(self, logs=None, **kwargs):
         """
         Prints that training has started
         :param logs: training data
         :return: None
         """
-        logging.info("Starting training\n")
+        first_episode = kwargs.get("start_episode", None)
+        logging.info("Starting training from episode {}\n".format(first_episode if first_episode is not None else 0))
 
-    def on_train_end(self, logs=None):
+    def on_train_end(self, logs=None, **kwargs):
         """
         Prints that training has finished
         :param logs: training data

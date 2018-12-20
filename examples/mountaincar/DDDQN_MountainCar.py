@@ -11,10 +11,11 @@ from deeprl.agents import QAgent
 from deeprl.callbacks import Saver
 from deeprl.trainers.qlearning import DoubleDQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDuelingDQN
-from deeprl.utils import record_video
+from deeprl.utils import record_video, visualize
 
 
 RANDOM_SEED = 40
+N_EPISODES = 400
 
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
@@ -62,19 +63,24 @@ print("State space size: {}".format(s_size))
 sess = tf.Session()
 model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 agent = QAgent(model)
+
+config = DQNConfig()
+trainer = DoubleDQNTrainer(config, agent, env)
+trainer.callbacks.append(Saver(model, step=10))
+
 sess.run(tf.global_variables_initializer())
 
+start_episode = 0
 checkpoint = tf.train.get_checkpoint_state("model_chkp")
 if checkpoint and checkpoint.model_checkpoint_path:
     print("Loading: {}".format(checkpoint.model_checkpoint_path))
     saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, model.name))
     saver.restore(sess, checkpoint.model_checkpoint_path)
-else:
-    config = DQNConfig()
-    trainer = DoubleDQNTrainer(config, agent, env)
-    trainer.callbacks.append(Saver(model, step=10))
-
-    trainer.train(300)
+    start_episode = int(checkpoint.model_checkpoint_path.split("-")[-1])
 
 
+trainer.train(N_EPISODES, start_episode=start_episode)
+
+
+# visualize(agent, env)
 record_video(agent, env)

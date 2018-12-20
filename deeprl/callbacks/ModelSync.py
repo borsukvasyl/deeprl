@@ -21,7 +21,15 @@ class ModelSync(BaseCallback):
         self.step = step
         self.last_episode = 0
 
-    def on_episode_end(self, episode, logs=None):
+    def on_train_begin(self, logs=None, **kwargs):
+        """
+        Makes initial synchronisation
+        :param logs: dict, episode data
+        :return: None
+        """
+        self.model.sync(self.source_model)
+
+    def on_episode_end(self, episode, logs=None, **kwargs):
         """
         Synchronizes model if last update was self.step episodes ago
         :param episode: int, episode number

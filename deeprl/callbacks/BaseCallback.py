@@ -8,7 +8,7 @@ from abc import ABCMeta
 class BaseCallback(object):
     __metaclass__ = ABCMeta
 
-    def on_episode_begin(self, episode, logs=None):
+    def on_episode_begin(self, episode, logs=None, **kwargs):
         """
         Method which is executed when new episode is started
         :param episode: int, episode number
@@ -17,7 +17,7 @@ class BaseCallback(object):
         """
         pass
 
-    def on_episode_end(self, episode, logs=None):
+    def on_episode_end(self, episode, logs=None, **kwargs):
         """
         Method which is executed when episode is finished
         :param episode: int, episode number
@@ -26,7 +26,7 @@ class BaseCallback(object):
         """
         pass
 
-    def on_train_begin(self, logs=None):
+    def on_train_begin(self, logs=None, **kwargs):
         """
         Method which is executed when training is started
         :param logs: training data
@@ -34,7 +34,7 @@ class BaseCallback(object):
         """
         pass
 
-    def on_train_end(self, logs=None):
+    def on_train_end(self, logs=None, **kwargs):
         """
         Method which is executed when training is finished
         :param logs: training data

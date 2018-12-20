@@ -19,7 +19,7 @@ class CallbackList(object):
         """
         self.callbacks.append(callback)
 
-    def on_episode_begin(self, episode, logs=None):
+    def on_episode_begin(self, episode, logs=None, **kwargs):
         """
         Runs on_episode_begin methods for all callbacks when new episode is started
         :param episode: int, episode number
@@ -27,9 +27,9 @@ class CallbackList(object):
         :return: None
         """
         for callback in self.callbacks:
-            callback.on_episode_begin(episode, logs)
+            callback.on_episode_begin(episode, logs, **kwargs)
 
-    def on_episode_end(self, episode, logs=None):
+    def on_episode_end(self, episode, logs=None, **kwargs):
         """
         Runs on_episode_end methods for all callbacks when episode is finished
         :param episode: int, episode number
@@ -37,22 +37,22 @@ class CallbackList(object):
         :return: None
         """
         for callback in self.callbacks:
-            callback.on_episode_end(episode, logs)
+            callback.on_episode_end(episode, logs, **kwargs)
 
-    def on_train_begin(self, logs=None):
+    def on_train_begin(self, logs=None, **kwargs):
         """
         Runs on_train_begin methods for all callbacks when training is started
         :param logs: training data
         :return: None
         """
         for callback in self.callbacks:
-            callback.on_train_begin(logs)
+            callback.on_train_begin(logs, **kwargs)
 
-    def on_train_end(self, logs=None):
+    def on_train_end(self, logs=None, **kwargs):
         """
         Runs on_train_end methods for all callbacks when training is finished
         :param logs: training data
         :return: None
         """
         for callback in self.callbacks:
-            callback.on_train_end(logs)
+            callback.on_train_end(logs, **kwargs)

@@ -19,7 +19,7 @@ class EGreedyDecay(BaseCallback):
         self.e_min = e_min
         self.e_decay = e_decay
 
-    def on_episode_end(self, episode, logs=None):
+    def on_episode_end(self, episode, logs=None, **kwargs):
         """
         Decreases e if it is bigger than e_min
         :param episode: int, episode number
@@ -28,3 +28,12 @@ class EGreedyDecay(BaseCallback):
         """
         if self.e_greedy.e > self.e_min:
             self.e_greedy.e *= self.e_decay
+
+    def on_train_begin(self, logs=None, **kwargs):
+        """
+        Sets e corresponding to current episode
+        :param logs: dict, episode data
+        :return: None
+        """
+        new_e = self.e_greedy.e * (self.e_decay ** kwargs.get("start_episode", 0))
+        self.e_greedy.e = new_e if new_e > self.e_min else self.e_min
