@@ -9,3 +9,4 @@ from deeprl.callbacks.EGreedyDecay import EGreedyDecay
 from deeprl.callbacks.ConsoleLogger import ConsoleLogger
 from deeprl.callbacks.ModelSync import ModelSync
 from deeprl.callbacks.Saver import Saver
+from deeprl.callbacks.Tensorboard import Tensorboard

@@ -8,6 +8,7 @@ import tensorflow as tf
 import random
 
 from deeprl.agents import QAgent
+from deeprl.callbacks import Tensorboard
 from deeprl.trainers.qlearning import DoubleDQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDuelingDQN
 
@@ -62,6 +63,7 @@ model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 agent = QAgent(model)
 config = DQNConfig()
 trainer = DoubleDQNTrainer(config, agent, env)
+trainer.callbacks.append(Tensorboard(sess, ["r_total"]))
 
 sess.run(tf.global_variables_initializer())
 
