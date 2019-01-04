@@ -5,48 +5,20 @@ from __future__ import print_function
 import numpy as np
 
 from deeprl.trainers import BaseTrainer
-from deeprl.utils import Experience
 
 
 class A2CTrainer(BaseTrainer):
     def __init__(self, config, agent, env):
-        super(A2CTrainer, self).__init__(agent, env)
+        super(A2CTrainer, self).__init__(config, agent, env)
 
         self.discount_factor = config.discount_factor
-        self.batch_size = config.batch_size
 
-    def choose_action(self, state):
-        return self.agent.choose_action(state)
-
-    def run_episode(self):
-        s = self.env.reset()
-        done = False
-        r_total = 0
-
-        experience = Experience()
-        loss = None
-
-        while not done:
-            a = self.choose_action(s)
-            s1, r, done, _ = self.env.step(a)
-
-            experience.add(s, a, r, s1, done)
-            s = s1
-
-            r_total += r
-            if done or experience.size > self.batch_size:
-                loss = self.update_model(experience)
-                experience.clear()
-
-        logs = {"loss": loss, "r_total": r_total}
-        return logs
-
-    def update_model(self, experience):
-        batch_s = np.array([i[0] for i in experience])
-        batch_a = np.array([i[1] for i in experience])
-        batch_r = np.array([i[2] for i in experience])
-        batch_s1 = np.array([i[3] for i in experience])
-        batch_done = np.array([i[4] for i in experience])
+    def update_model(self, batch):
+        batch_s = np.array([i[0] for i in batch])
+        batch_a = np.array([i[1] for i in batch])
+        batch_r = np.array([i[2] for i in batch])
+        batch_s1 = np.array([i[3] for i in batch])
+        batch_done = np.array([i[4] for i in batch])
 
         batch_target_v = self.get_v_target(batch_r, batch_s1, batch_done)
         batch_advantages = self.get_advantages(batch_target_v, batch_s)

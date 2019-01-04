@@ -11,6 +11,7 @@ from deeprl.agents import QAgent
 from deeprl.callbacks import Tensorboard
 from deeprl.trainers.qlearning import DoubleDQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDuelingDQN
+from deeprl.utils.visualize import visualize
 
 
 RANDOM_SEED = 40
@@ -69,11 +70,4 @@ sess.run(tf.global_variables_initializer())
 
 trainer.train(300)
 
-
-s = env.reset()
-done = False
-while not done:
-    env.render()
-    a = agent.choose_action(s)
-    s, r, done, _ = env.step(a)
-env.close()
+visualize(agent, env)

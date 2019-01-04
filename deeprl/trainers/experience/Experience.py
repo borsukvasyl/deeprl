@@ -3,7 +3,8 @@ from __future__ import division
 from __future__ import print_function
 
 from collections import deque
-import random
+
+from deeprl.trainers.experience.samplers import generate_sampler
 
 
 class Experience(object):
@@ -11,11 +12,14 @@ class Experience(object):
     Data structure to store experience frames
     """
 
-    def __init__(self, maxlen=None):
+    def __init__(self, config):
         """
         :param maxlen: int, maximum length of experience
         """
-        self.experience = deque(maxlen=maxlen)
+        self.config = config
+        self.experience = deque(maxlen=config.experience_size)
+
+        self.sampler = generate_sampler(self, config)
 
     @property
     def size(self):
@@ -52,13 +56,13 @@ class Experience(object):
         """
         self.experience.clear()
 
-    def sample(self, batch_size):
+    def sample(self, done=False):
         """
         Samples random experience.
-        :param batch_size: int, number of experience frames to return
+        :param done: bool, whether episode is finished
         :return: list or ValueError, if batch_size is negative ot bigger than experience length
         """
-        return random.sample(self.experience, batch_size)
+        return self.sampler.sample(done)
 
     def __iter__(self):
         for exp in self.experience:

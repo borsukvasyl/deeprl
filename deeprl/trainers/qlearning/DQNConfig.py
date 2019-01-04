@@ -6,6 +6,7 @@ from __future__ import print_function
 class DQNConfig(object):
     def __init__(self):
         # experience replay
+        self.experience_sampler = ["random"]
         self.experience_size = 2000
         self.batch_size = 40
 

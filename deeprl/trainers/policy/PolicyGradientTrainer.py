@@ -9,36 +9,11 @@ from deeprl.trainers import BaseTrainer
 
 class PolicyGradientTrainer(BaseTrainer):
     def __init__(self, config, agent, env):
-        super(PolicyGradientTrainer, self).__init__(agent, env)
+        super(PolicyGradientTrainer, self).__init__(config, agent, env)
 
         self.discount_factor = config.discount_factor
 
-    def choose_action(self, state):
-        return self.agent.choose_action(state)
-
-    def run_episode(self):
-        experience = []
-
-        s = self.env.reset()
-        done = False
-        r_total = 0
-        loss = None
-
-        while not done:
-            a = self.choose_action(s)
-            s1, r, done, _ = self.env.step(a)
-
-            experience.append((s, a, r, s1, done))
-            s = s1
-
-            r_total += r
-            loss = self.update_model(experience)
-
-        logs = {"loss": loss, "r_total": r_total}
-        return logs
-
-    def update_model(self, experience):
-        batch = experience
+    def update_model(self, batch):
         batch_s = np.array([i[0] for i in batch])
         batch_a = np.array([i[1] for i in batch])
         batch_r = np.array([i[2] for i in batch])

@@ -82,7 +82,6 @@ else:
     trainer = A2CTrainer(config, agent, env)
     trainer.callbacks.append(Saver(model, step=20))
 
-    trainer.train(2000)
-
+    trainer.train(300)
 
 record_video(agent, env)
