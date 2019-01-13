@@ -46,8 +46,8 @@ class Experience(object):
     def _add(self, data):
         self.experience.append(data)
 
-    def add(self, state, action, reward, next_state, done):
-        self._add([state, action, reward, next_state, done])
+    def add(self, *data):
+        self._add(data)
 
     def clear(self):
         """

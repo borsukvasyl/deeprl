@@ -15,7 +15,7 @@ from deeprl.utils import record_video
 
 
 RANDOM_SEED = 40
-N_EPISODES = 5000
+N_EPISODES = 10000
 
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
@@ -67,9 +67,9 @@ class ACNet(BaseACNet):
         self.policy = tf.layers.dense(inputs=lstm_outputs, units=self.a_size, activation=tf.nn.softmax)
         self.v = tf.layers.dense(inputs=lstm_outputs, units=1, activation=None)
 
-        self.policy_loss = self.calculate_policy_loss(self.policy, self.actions, self.advantages, self.a_size)
+        self.policy_loss, self.entropy_loss = self.calculate_policy_loss(self.policy, self.actions, self.advantages, self.a_size, entropy=True)
         self.value_loss = self.calculate_value_loss(self.v, self.target_v)
-        self.loss = self.policy_loss + 0.5 * self.value_loss
+        self.loss = self.policy_loss + 0.5 * self.value_loss - 0.01 * self.entropy_loss
         trainer = tf.train.AdamOptimizer(learning_rate=0.01)
         self.optimize = trainer.minimize(self.loss)
 
@@ -81,26 +81,36 @@ class ACNet(BaseACNet):
         })
         return policy
 
-    def get_v(self, states):
-        return self.session.run(self.v, feed_dict={
+    def get_policy_and_value(self, states):
+        policy, v, self.base_lstm_state_out = self.session.run([self.policy, self.v, self.base_lstm_state], feed_dict={
             self.states: states,
             self.lstm_state0: self.base_lstm_state_out[0],
             self.lstm_state1: self.base_lstm_state_out[1]
-        })[:, 0]
+        })
+        return policy, v
+
+    def get_v(self, states):
+        v = self.session.run(self.v, feed_dict={
+            self.states: states,
+            self.lstm_state0: self.base_lstm_state_out[0],
+            self.lstm_state1: self.base_lstm_state_out[1]
+        })
+        return v
 
     def train(self, batch_states, batch_actions, batch_advantages, batch_target_v):
-        loss, _ = self.session.run([self.loss, self.optimize], feed_dict={
+        loss, _, self.base_lstm_state_out_t = self.session.run([self.loss, self.optimize, self.base_lstm_state], feed_dict={
             self.states: batch_states,
             self.actions: batch_actions,
             self.advantages: batch_advantages,
             self.target_v: batch_target_v,
-            self.lstm_state0: np.zeros([1, 256]),
-            self.lstm_state1: np.zeros([1, 256])
+            self.lstm_state0: self.base_lstm_state_out_t[0],
+            self.lstm_state1: self.base_lstm_state_out_t[1]
         })
         return loss
 
     def reset(self):
         self.base_lstm_state_out = tf.contrib.rnn.LSTMStateTuple(np.zeros([1, 256]), np.zeros([1, 256]))
+        self.base_lstm_state_out_t = tf.contrib.rnn.LSTMStateTuple(np.zeros([1, 256]), np.zeros([1, 256]))
 
 
 env = gym.make("Boxing-v0")
@@ -118,7 +128,7 @@ model = ACNet("main", sess, s_size=s_size, a_size=a_size)
 agent = ActorCriticAgent(model)
 
 config = ACConfig()
-config.min_sample_size = 32
+config.min_sample_size = 64
 trainer = A2CTrainer(config, agent, env)
 trainer.callbacks.append(Saver(model, step=20))
 trainer.callbacks.append(LstmResetter([model]))
@@ -136,6 +146,6 @@ if checkpoint and checkpoint.model_checkpoint_path:
 
 trainer.train(N_EPISODES, start_episode=start_episode)
 
-
+model.reset()
 # visualize(agent, env)
 record_video(agent, env)
