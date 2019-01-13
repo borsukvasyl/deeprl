@@ -102,7 +102,7 @@ class ACNet(BaseACNet):
         self.base_lstm_state_out = tf.contrib.rnn.LSTMStateTuple(np.zeros([1, 256]), np.zeros([1, 256]))
 
 
-env = gym.make("SpaceInvaders-v0")
+env = gym.make("Boxing-v0")
 
 a_size = env.action_space.n
 s_size = env.observation_space.shape
