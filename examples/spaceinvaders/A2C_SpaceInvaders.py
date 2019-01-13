@@ -12,6 +12,7 @@ from deeprl.callbacks.Saver import Saver, BaseCallback
 from deeprl.trainers.actorcritic import A2CTrainer, ACConfig
 from deeprl.models.actorcritic import BaseACNet
 from deeprl.utils import record_video
+from deeprl.environments.AtariWrapper import AtariWrapper
 
 
 RANDOM_SEED = 40
@@ -48,9 +49,8 @@ class ACNet(BaseACNet):
 
         conv1 = tf.layers.conv2d(inputs=self.states, filters=32, kernel_size=[6, 6], strides=3, activation=tf.nn.relu)
         conv2 = tf.layers.conv2d(inputs=conv1, filters=64, kernel_size=[4, 4], strides=2, activation=tf.nn.relu)
-        conv3 = tf.layers.conv2d(inputs=conv2, filters=96, kernel_size=[4, 4], strides=2, activation=tf.nn.relu)
-        conv4 = tf.layers.conv2d(inputs=conv3, filters=128, kernel_size=[4, 4], strides=2, activation=tf.nn.relu)
-        flat = tf.layers.flatten(conv4)
+        conv3 = tf.layers.conv2d(inputs=conv2, filters=64, kernel_size=[4, 4], strides=2, activation=tf.nn.relu)
+        flat = tf.layers.flatten(conv3)
         print("Flatten size:", flat.get_shape())
 
         dense1 = tf.layers.dense(inputs=flat, units=256, activation=tf.nn.relu)
@@ -114,9 +114,10 @@ class ACNet(BaseACNet):
 
 
 env = gym.make("SpaceInvaders-v0")
+env = AtariWrapper(env)
 
 a_size = env.action_space.n
-s_size = env.observation_space.shape
+s_size = (84, 84, 1)  # env.observation_space.shape
 print("Action space size: {}".format(a_size))
 print("State space size: {}".format(s_size))
 
