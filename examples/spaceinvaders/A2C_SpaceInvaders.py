@@ -74,11 +74,12 @@ class ACNet(BaseACNet):
         self.optimize = trainer.minimize(self.loss)
 
     def get_policy(self, states):
-        return self.session.run(self.policy, feed_dict={
+        policy, self.base_lstm_state_out = self.session.run([self.policy, self.base_lstm_state], feed_dict={
             self.states: states,
             self.lstm_state0: self.base_lstm_state_out[0],
             self.lstm_state1: self.base_lstm_state_out[1]
         })
+        return policy
 
     def get_v(self, states):
         return self.session.run(self.v, feed_dict={
