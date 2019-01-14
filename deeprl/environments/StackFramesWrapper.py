@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
 from collections import deque
 import numpy as np
 import gym
@@ -13,8 +12,11 @@ class States(object):
     def __init__(self, states):
         self.states = states
 
-    def __array__(self):
-        return np.dstack(self.states)
+    def __array__(self, dtype=None):
+        res = np.dstack(self.states)
+        if dtype is not None:
+            res = res.astype(dtype)
+        return res
 
 
 class StackFramesWrapper(gym.Wrapper):
@@ -38,4 +40,5 @@ class StackFramesWrapper(gym.Wrapper):
         return self._get_observation(), reward, done, info
 
     def _get_observation(self):
-        return States(list(self.states))
+        return np.dstack(self.states)
+        # return States(list(self.states))
