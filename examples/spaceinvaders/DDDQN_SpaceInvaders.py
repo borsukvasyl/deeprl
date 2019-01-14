@@ -12,8 +12,7 @@ from deeprl.callbacks import Tensorboard, Saver
 from deeprl.trainers.qlearning import DoubleDQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDuelingDQN
 from deeprl.utils import record_video
-from deeprl.environments.AtariWrapper import AtariWrapper
-from deeprl.environments.StackFramesWrapper import StackFramesWrapper
+from deeprl.environments import make_wrapper
 
 
 RANDOM_SEED = 40
@@ -62,8 +61,7 @@ class DQNetwork(BaseDuelingDQN):
 
 
 env = gym.make("SpaceInvaders-v0")
-env = AtariWrapper(env)
-env = StackFramesWrapper(env)
+make_wrapper(env, stack_frames=True)
 
 a_size = env.action_space.n
 s_size = env.observation_space.shape
@@ -78,6 +76,7 @@ model = DQNetwork("main", sess, s_size=s_size, a_size=a_size)
 agent = QAgent(model)
 
 config = DQNConfig()
+config.experience_size = 100000
 config.batch_size = 32
 trainer = DoubleDQNTrainer(config, agent, env)
 trainer.callbacks.append(Tensorboard(sess, ["r_total"]))

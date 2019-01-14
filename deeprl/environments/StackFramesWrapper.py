@@ -9,6 +9,14 @@ import gym
 from gym import spaces
 
 
+class States(object):
+    def __init__(self, states):
+        self.states = states
+
+    def __array__(self):
+        return np.dstack(self.states)
+
+
 class StackFramesWrapper(gym.Wrapper):
     def __init__(self, env, maxlen=4):
         super(StackFramesWrapper, self).__init__(env)
@@ -30,4 +38,4 @@ class StackFramesWrapper(gym.Wrapper):
         return self._get_observation(), reward, done, info
 
     def _get_observation(self):
-        return np.dstack(self.states)
+        return States(list(self.states))
