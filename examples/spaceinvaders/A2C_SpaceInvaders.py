@@ -8,7 +8,7 @@ import tensorflow as tf
 import random
 
 from deeprl.agents import ActorCriticAgent
-from deeprl.callbacks.Saver import Saver, BaseCallback
+from deeprl.callbacks import Saver, Tensorboard, BaseCallback
 from deeprl.trainers.actorcritic import A2CTrainer, ACConfig
 from deeprl.models.actorcritic import BaseACNet
 from deeprl.utils import record_video
@@ -117,7 +117,7 @@ env = gym.make("SpaceInvaders-v0")
 env = AtariWrapper(env)
 
 a_size = env.action_space.n
-s_size = (84, 84, 1)  # env.observation_space.shape
+s_size = env.observation_space.shape
 print("Action space size: {}".format(a_size))
 print("State space size: {}".format(s_size))
 
@@ -132,6 +132,7 @@ config = ACConfig()
 config.min_sample_size = 64
 trainer = A2CTrainer(config, agent, env)
 trainer.callbacks.append(Saver(model, step=20))
+trainer.callbacks.append(Tensorboard(sess, ["r_total"]))
 trainer.callbacks.append(LstmResetter([model]))
 
 sess.run(tf.global_variables_initializer())
