@@ -61,7 +61,7 @@ class DQNetwork(BaseDuelingDQN):
 
 
 env = gym.make("SpaceInvaders-v0")
-make_wrapper(env, stack_frames=True)
+env = make_wrapper(env, stack_frames=True)
 
 a_size = env.action_space.n
 s_size = env.observation_space.shape
