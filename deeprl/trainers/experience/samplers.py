@@ -20,8 +20,13 @@ class BaseSampler(object):
 
 
 class RandomSampler(BaseSampler):
+    def __init__(self, experience, config, prev_sampler=None):
+        super(RandomSampler, self).__init__(experience, config, prev_sampler)
+        self.last_update = -1
+
     def sample(self, done):
-        if self.experience.size >= self.config.batch_size:
+        self.last_update = 0 if done else self.last_update + 1
+        if self.last_update % self.config.train_freq == 0 and self.experience.size >= self.config.batch_size:
             return random.sample(self.experience.experience, self.config.batch_size)
         return None
 

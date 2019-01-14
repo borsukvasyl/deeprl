@@ -9,6 +9,7 @@ class DQNConfig(object):
         self.experience_sampler = ["random"]
         self.experience_size = 2000
         self.batch_size = 40
+        self.train_freq = 4
 
         # For epsilon greedy policy
         self.e = 1
