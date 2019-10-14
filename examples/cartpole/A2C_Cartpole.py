@@ -47,6 +47,10 @@ class ACNet(BaseACNet):
     def get_v(self, states):
         return self.session.run(self.v, feed_dict={self.states: states})[:, 0]
 
+    def get_policy_and_value(self, states):
+        policy, v = self.session.run([self.policy, self.v], feed_dict={self.states: states})
+        return policy, v
+
     def train(self, batch_states, batch_actions, batch_advantages, batch_target_v):
         loss, _ = self.session.run([self.loss, self.optimize], feed_dict={
             self.states: batch_states,
@@ -58,7 +62,7 @@ class ACNet(BaseACNet):
 
 
 env = gym.make("CartPole-v0")
-env._max_episode_steps = 800
+# env._max_episode_steps = 800
 
 a_size = env.action_space.n
 s_size = env.observation_space.shape[0]
@@ -80,7 +84,7 @@ else:
     config = ACConfig()
     config.discount_factor = 0.9
     trainer = A2CTrainer(config, agent, env)
-    trainer.callbacks.append(Saver(model, step=20))
+    # trainer.callbacks.append(Saver(model, step=20))
 
     trainer.train(300)
 

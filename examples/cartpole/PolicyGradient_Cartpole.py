@@ -10,7 +10,7 @@ import random
 from deeprl.agents import PolicyAgent
 from deeprl.trainers.policy import PolicyGradientTrainer, PolicyGradientConfig
 from deeprl.models.policy import BasePolicyNet
-
+from deeprl.utils import record_video
 
 RANDOM_SEED = 40
 
@@ -65,13 +65,6 @@ trainer = PolicyGradientTrainer(config, agent, env)
 
 sess.run(tf.global_variables_initializer())
 
-trainer.train(200)
+trainer.train(300)
 
-
-s = env.reset()
-done = False
-while not done:
-    env.render()
-    a = agent.choose_action(s)
-    s, r, done, _ = env.step(a)
-env.close()
+record_video(agent, env)

@@ -10,7 +10,7 @@ import random
 from deeprl.agents import QAgent
 from deeprl.trainers.qlearning import DQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDQN
-
+from deeprl.utils import record_video
 
 RANDOM_SEED = 40
 
@@ -65,11 +65,4 @@ sess.run(tf.global_variables_initializer())
 
 trainer.train(300)
 
-
-s = env.reset()
-done = False
-while not done:
-    env.render()
-    a = agent.choose_action(s)
-    s, r, done, _ = env.step(a)
-env.close()
+record_video(agent, env)

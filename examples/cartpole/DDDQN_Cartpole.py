@@ -11,7 +11,7 @@ from deeprl.agents import QAgent
 from deeprl.callbacks import Tensorboard
 from deeprl.trainers.qlearning import DoubleDQNTrainer, DQNConfig
 from deeprl.models.qlearning import BaseDuelingDQN
-from deeprl.utils.visualize import visualize
+from deeprl.utils.visualize import record_video
 
 
 RANDOM_SEED = 40
@@ -70,4 +70,4 @@ sess.run(tf.global_variables_initializer())
 
 trainer.train(300)
 
-visualize(agent, env)
+record_video(agent, env)
